@@ -1,9 +1,9 @@
 # piBootstrap
-Shell Script to Bootstrap a [minimal Pi Image](https://minibianpi.wordpress.com/)
+##Shell Script to Bootstrap a [minimal Pi Image](https://minibianpi.wordpress.com/)
 
-- Should only be run once after first boot
+- Should only be run **once** after first boot
 
-Features
+##Features
 - Resize Root Parition
  - remove swap if it exists, recreate if enough space (8GB > SD Card)
 - Reboot After modifications to reinitilize partition table
