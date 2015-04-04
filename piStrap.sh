@@ -2,7 +2,7 @@
 # @Author: harmoN
 # @Date:   2015-04-03 10:11:23
 # @Last Modified by:   harmoN
-# @Last Modified time: 2015-04-04 02:18:41
+# @Last Modified time: 2015-04-04 03:08:08
 
 # RASPBERRY Pi Bootstrap Script
 
@@ -175,8 +175,10 @@ else
                   cd PIGPIO
                   make
                   make install
+                  pigpiod
+                  sed -i '$ i\\/usr\/local\/bin\/pigpiod' /etc/rc.local
                   echo "GPIO" >> $RUN_FILE
-                  echo -e "${GREEN}pigpio Library Installed ${RST}\n"
+                  echo -e "${GREEN}pigpio Library Installed and pigpiod started${RST}\n"
                   break;;
           [nN]* ) break;;
 
