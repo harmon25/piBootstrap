@@ -2,7 +2,7 @@
 # @Author: harmoN
 # @Date:   2015-04-03 10:11:23
 # @Last Modified by:   harmoN
-# @Last Modified time: 2015-04-04 01:27:51
+# @Last Modified time: 2015-04-04 01:37:29
 
 # RASPBERRY Pi Bootstrap Script
 
@@ -204,7 +204,7 @@ else
 		  		esac
 			done
 		fi
-    echo -e "${GREEN}Custom Package Install Complete!${RST}"
+    echo -e "${GREEN}Custom Package Install Complete!${RST} \n"
 
     echo "${GREEN}User Modifications${RST}"
 
@@ -224,7 +224,6 @@ else
 	  		esac
 		done
 
-
 		#Change Hostname
 		if [ $NAME -lt 1 ]; then
 			read -p "${BOLD}Change System HostName?${RST} [Yy/Nn] " hostn
@@ -234,8 +233,7 @@ else
 			[yY]* ) read -p "${BOLD}Enter New Hostname: ${RST}" newname
 							sed -i '/'$(hostname)'/d' /etc/hosts
 							echo $newname > /etc/hostname
-							echo "127.0.0.1 $newname" >> /etc/hostname
-							hostname $newname
+							echo "127.0.0.1 $newname" >> /etc/hosts
 							/etc/init.d/hostname.sh
 							echo "${GREEN}Hostname Changed too ${RST} $newname"
 							echo "NAME" >> $RUN_FILE
@@ -266,5 +264,5 @@ else
 		done
 		fi
 
-		echo "${BOLD}${GREEN}Pi BootStrap Succesful! ${RST} "
+		echo -e "\n${BOLD}${GREEN}Pi BootStrap Succesful! ${RST} "
 fi
