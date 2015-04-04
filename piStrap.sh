@@ -2,7 +2,7 @@
 # @Author: harmoN
 # @Date:   2015-04-03 10:11:23
 # @Last Modified by:   harmoN
-# @Last Modified time: 2015-04-04 03:08:08
+# @Last Modified time: 2015-04-04 19:00:08
 
 # RASPBERRY Pi Bootstrap Script
 
@@ -100,35 +100,49 @@ else
       apt-get dist-upgrade -y
       apt-get install -y rpi-update raspi-config
       rpi-update
-      apt-get install -y build-essential unzip nano sudo git
+      apt-get install -y build-essential unzip nano sudo git python python-dev python-pip
+      apt-get install python-rpi.gpio
       echo -e "${GREEN}Done base Package Install!${RST}"
       echo "Base" >> $RUN_FILE
     fi
 
     #Custom Package Install
     echo "${GREEN}Custom Package Install ${RST}"
+    
     #Python Version
     if [ $PY -lt 1 ]; then
       read -p "${BOLD}Configure Python?${RST} [Yy/Nn] " pyth
       while true
       do
         case $pyth in
-        [yY]* ) read -p "${BOLD}Default Python2 or Python3?${RST} [2,3] " pythonv
+        [yY]* ) read -p "${BOLD}Install Python3?${RST} [Yy/Nn] " pythonv
                 while true
                 do
                   case $pythonv in
-                    [3]* ) apt-get install -y python3 python3-dev python3-pip
-                           rm -f /usr/bin/python
-                           ln -s /usr/bin/python3 /usr/bin/python
+                    [yY]* ) apt-get install -y python3 python3-dev python3-pip python3-setuptools
+
+                          read -p "${BOLD}Set $(which python3) as default python?${RST} [Yy/Nn] " pytd
+                            while true
+                            do
+                              case $pytd in
+                                [yY]* ) rm -f /usr/bin/python
+                                        ln -s /usr/bin/python3 /usr/bin/python
+                                       break;;
+                                [nN]* ) 
+                                       break;;
+
+                                    *) echo "${RED}Choose Y, or N ${RST}"
+                                       break;;
+                              esac
+                            done
                            break;;
-                    [2]* ) apt-get install -y python python-dev python-pip
+                    [nN]* ) 
                            break;;
 
-                        *) echo "${RED}Choose 2, or 3 ${RST}"
+                        *) echo "${RED}Choose Y, or N ${RST}"
                            break;;
                   esac
                 done
-                echo "Py" >> $RUN_FILE
                 break;;
         [nN]* ) break;;
 
@@ -136,6 +150,7 @@ else
                 break;;
         esac
       done
+    echo "Py" >> $RUN_FILE
     fi
 
     #w1-gpio Temp Sensor
@@ -145,16 +160,17 @@ else
       do
         case $temp in
         [yY]* ) echo "dtoverlay=w1-gpio" >> /boot/config.txt
-            echo -e "w1-gpio\nw1-therm" >> /etc/modules
-            modprobe w1-gpio
-            modprobe w1-therm
-            cd /tmp/
-            git clone https://github.com/timofurrer/w1thermsensor
-            cd w1thermsensor
-            python ./setup.py install
-            echo "w1" >> $RUN_FILE
-            echo -e "${GREEN}w1-gpio and w1-therm modules enabled and configured${RST}\n"
-            break;;
+                echo -e "w1-gpio\nw1-therm" >> /etc/modules
+                modprobe w1-gpio
+                modprobe w1-therm
+                cd /tmp/
+                git clone https://github.com/timofurrer/w1thermsensor
+                cd w1thermsensor
+                python ./setup.py install
+                echo "w1" >> $RUN_FILE
+                echo -e "${GREEN}w1-gpio and w1-therm modules enabled and configured, reboot to enable${RST}\n"
+                break;;
+
         [nN]* ) break;;
            
            *) echo "${RED}Choose Y, or N ${RST}"
@@ -163,19 +179,19 @@ else
       done
     fi
 
-    #pigpio Library
+    #GPIO Libraryies Library
     if [ $GPIO -lt 1 ]; then
-      read -p "${BOLD}Install pigpio Library?${RST} [Yy,Nn] " gpio
+      read -p "${BOLD}Install pigpio Library?${RST} [Yy,Nn] " gpioa
       while true
       do
-        case $gpio in
+        case $gpioa in
           [yY]* ) cd /tmp/
                   wget abyz.co.uk/rpi/pigpio/pigpio.zip
                   unzip pigpio.zip
                   cd PIGPIO
                   make
                   make install
-                  pigpiod
+                  /usr/local/bin/pigpiod
                   sed -i '$ i\\/usr\/local\/bin\/pigpiod' /etc/rc.local
                   echo "GPIO" >> $RUN_FILE
                   echo -e "${GREEN}pigpio Library Installed and pigpiod started${RST}\n"
@@ -198,8 +214,13 @@ else
               git clone https://github.com/adafruit/Adafruit_Python_SSD1306
               cd Adafruit_Python_SSD1306
               python setup.py install
+              apt-get install python-imaging python-smbus
+              echo -e "i2c-bcm2708\ni2c-dev" >> /etc/modules
+              modprobe i2c-bcm2708
+              modprobe i2c-dev
+              echo -e "dtparam=i2c1=on\ndtparam=i2c_arm=on" >> /boot/config.txt
               echo "OLED" >> $RUN_FILE
-              echo -e "${GREEN}Adafruit Python SSD1306 Library Installed${RST}\n"
+              echo -e "${GREEN}Adafruit Python SSD1306 Library Installed - Reboot to enable i2c kernel module${RST}\n"
               break;;
           [nN]* ) break;;
 
