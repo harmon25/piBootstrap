@@ -2,7 +2,7 @@
 # @Author: harmoN
 # @Date:   2015-04-03 10:11:23
 # @Last Modified by:   harmoN
-# @Last Modified time: 2015-04-04 01:54:35
+# @Last Modified time: 2015-04-04 02:18:41
 
 # RASPBERRY Pi Bootstrap Script
 
@@ -121,7 +121,6 @@ else
                            rm -f /usr/bin/python
                            ln -s /usr/bin/python3 /usr/bin/python
                            break;;
-                      
                     [2]* ) apt-get install -y python python-dev python-pip
                            break;;
 
@@ -154,6 +153,7 @@ else
             cd w1thermsensor
             python ./setup.py install
             echo "w1" >> $RUN_FILE
+            echo -e "${GREEN}w1-gpio and w1-therm modules enabled and configured${RST}\n"
             break;;
         [nN]* ) break;;
            
@@ -170,13 +170,14 @@ else
       do
         case $gpio in
           [yY]* ) cd /tmp/
-              wget abyz.co.uk/rpi/pigpio/pigpio.zip
-              unzip pigpio.zip
-              cd PIGPIO
-              make
-              make install
-              echo "GPIO" >> $RUN_FILE
-              break;;
+                  wget abyz.co.uk/rpi/pigpio/pigpio.zip
+                  unzip pigpio.zip
+                  cd PIGPIO
+                  make
+                  make install
+                  echo "GPIO" >> $RUN_FILE
+                  echo -e "${GREEN}pigpio Library Installed ${RST}\n"
+                  break;;
           [nN]* ) break;;
 
              *) echo "${RED}Choose Y, or N ${RST}"
@@ -187,7 +188,7 @@ else
 
     #Adafruit_Python_SSD1306
     if [ $OLED -lt 1 ]; then
-      read -p "${BOLD}Install SSD1306 (OLED) Library?${RST} [Yy,Nn] " oled
+      read -p "${BOLD}Install Adafruit Python SSD1306 (OLED) Library?${RST} [Yy,Nn] " oled
       while true
       do
         case $oled in
@@ -196,6 +197,7 @@ else
               cd Adafruit_Python_SSD1306
               python setup.py install
               echo "OLED" >> $RUN_FILE
+              echo -e "${GREEN}Adafruit Python SSD1306 Library Installed${RST}\n"
               break;;
           [nN]* ) break;;
 
