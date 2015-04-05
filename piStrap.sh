@@ -2,7 +2,7 @@
 # @Author: harmoN
 # @Date:   2015-04-03 10:11:23
 # @Last Modified by:   harmoN
-# @Last Modified time: 2015-04-04 19:00:08
+# @Last Modified time: 2015-04-04 19:07:29
 
 # RASPBERRY Pi Bootstrap Script
 
@@ -98,7 +98,7 @@ else
     if [ $BASE -lt 1 ]; then
       apt-get update && apt-get upgrade -y
       apt-get dist-upgrade -y
-      apt-get install -y rpi-update raspi-config
+      apt-get install -y rpi-update
       rpi-update
       apt-get install -y build-essential unzip nano sudo git python python-dev python-pip
       apt-get install python-rpi.gpio
@@ -179,7 +179,7 @@ else
       done
     fi
 
-    #GPIO Libraryies Library
+    #GPIO Libraries Library
     if [ $GPIO -lt 1 ]; then
       read -p "${BOLD}Install pigpio Library?${RST} [Yy,Nn] " gpioa
       while true
